@@ -3,6 +3,7 @@ services:
   web:
     build:
       context: .
+      target: dev
     stdin_open: true
     tty: true
     command: ["node", "app.js"]

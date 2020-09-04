@@ -119,7 +119,66 @@ Now you have an image that if you pulled to any computer with docker daemon on i
 
 ## docker-compose
 
+Notice the fact, that everytime you change something in your file. You need to rebuild the image so that it copies the new files into it.
+
+That's not so convinient I guess you can tell that.
+
 Now there is another thing that comes installed with docker that simplifies two things.
 
-* How your container deals with the host machine
+* How your container deals with the host machine (Volumes, ports, interactive)
 * How your container deal with other containers like for example postgres container
+
+First start by creating `docker-compose.yml`
+
+```
+version: "3.7"
+services:
+  web:
+    build:
+      context: .
+    stdin_open: true
+    tty: true
+    command: ["node", "app.js"]
+    volumes:
+      - ".:/usr/src/app"
+    ports:
+      - "5000:5000"
+```
+
+Now you will use docker-compose in development so you don't need by default to copy your application as you already mount the volume. and you don't need the default command as docker-compose anyways sets it up. So in this case what I would do is separate dockerfile into multiple stages as follow
+
+```
+From node:14-alpine AS dev
+WORKDIR /usr/src/app
+
+FROM dev AS 
+COPY . ./
+CMD ["node", "app.js"]
+```
+
+and then change docker-compose service build to be
+
+```
+version: "3.7"
+services:
+  web:
+    build:
+      context: .
+      target: dev
+    stdin_open: true
+    tty: true
+    command: ["node", "app.js"]
+    volumes:
+      - ".:/usr/src/app"
+    ports:
+      - "5000:5000"
+```
+
+What you can actually do is also run a specific command on a specific service using the `docker-compose run` command. this goes as following
+
+`docker-compose run web ash`
+
+This docker-compose also creates a network where all services defined there can communicate to each others over http.
+
+so for example if your application needs to connect to postgres. usually you will set it up to point to localhost right?
+
