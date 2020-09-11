@@ -122,7 +122,7 @@ one final small thing, instead of having to explicitly call the `node app.js` co
 From node:14-alpine
 WORKDIR /usr/src/app
 COPY . ./
-CMD ['node', 'app.js']
+CMD ["node", "app.js"]
 ```
 
 Now let's build the third tag
