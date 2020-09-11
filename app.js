@@ -5,7 +5,7 @@ const PORT = 5000;
 const User = require('./User');
 
 app.get('/', (req, res) => {
-  res.send({ message: 'endpoint working' });
+  res.send({ message: 'endpoints working' });
 });
 
 app.get('/users', User.readAll);

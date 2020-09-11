@@ -416,9 +416,43 @@ app.listen(PORT, () => {
 
 ```
 ## Package management fixes
-
-
-## Makefile
-
 So now we have the following:
-* A dockerfile that has two stages, one
+* A dockerfile that has two stages, one for development and the other is for production
+* A docker-compose file that works in development
+
+So usually in your CI you will basically build the production image and deploy it.
+
+one thing you will realise here is that you don't usually push your node modules so it won't exist in the live image because we simply do `COPY . ./`
+
+So as a first step we maybe should add to our dockerfile live stage the following step `RUN npm install` which then will install the dependencies.
+
+so the dockerfile should look like this 
+```
+From node:14-alpine AS dev
+WORKDIR /usr/src/app
+RUN apk add postgresql-client
+
+FROM dev AS production
+COPY . ./
+RUN npm install
+CMD ["node", "app.js"]
+```
+
+Okay there is a minor issue here, the way docker cache works is that it detects any change in any of the lines and invalidates what's after it.
+
+So everytime you copy files, if any of it changed it redoes the rest of the steps from the beginning.
+
+So everytime you change any file you are gonna reinstall your npm packages so instead what we do is the following usually
+
+```
+From node:14-alpine AS dev
+WORKDIR /usr/src/app
+RUN apk add postgresql-client
+
+FROM dev AS production
+COPY package*.json ./
+RUN npm install
+COPY . ./
+CMD ["node", "app.js"]
+```
+
