@@ -420,9 +420,9 @@ So now we have the following:
 * A dockerfile that has two stages, one for development and the other is for production
 * A docker-compose file that works in development
 
-So usually in your CI you will basically build the production image and deploy it.
+So usually in your CI you will basically build the production image and deploy it. by running `docker build -it myapp:production .`
 
-one thing you will realise here is that you don't usually push your node modules so it won't exist in the live image because we simply do `COPY . ./`
+One thing you will realise here is that you don't usually push your node modules so it won't exist in the live image because we simply do `COPY . ./`
 
 So as a first step we maybe should add to our dockerfile live stage the following step `RUN npm install` which then will install the dependencies.
 
