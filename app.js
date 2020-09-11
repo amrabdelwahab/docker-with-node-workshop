@@ -1,14 +1,15 @@
-const http = require('http');
+const express = require('express');
+const app = express();
+const HOST = '0.0.0.0'
+const PORT = 5000;
+const User = require('./User');
 
-const hostname = '0.0.0.0';
-const port = 5000;
-
-const server = http.createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  res.end('Hello World');
+app.get('/', (req, res) => {
+  res.send({ message: 'endpoint working' });
 });
 
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
+app.get('/users', User.readAll);
+
+app.listen(PORT, () => {
+  console.log(`Server running at: http://localhost:${PORT}/`);
 });

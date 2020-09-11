@@ -1,0 +1,16 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "description": "## What is docker needed for? A web application usually has bunch of pre-requisites. For example you need to have a specific version of node installed on your machine. Then you maybe need  a specific version of postgresql installed.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "pg": "^8.3.3"
+  }
+}
